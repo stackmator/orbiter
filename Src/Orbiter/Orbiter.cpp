@@ -1436,6 +1436,7 @@ VOID Orbiter::IncFOV (double dfov)
 //-----------------------------------------------------------------------------
 bool Orbiter::SaveScenario (const char *fname, const char *desc, int desc_type)
 {
+	if (!g_focusobj) return false;
 	pState->Update ();
 
 	ofstream ofs (ScnPath (fname));
