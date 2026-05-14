@@ -674,9 +674,9 @@ void Vessel::FRecorder_PlayEvent ()
 			} else if (!_strnicmp (s, "LIGHTSOURCE", 11)) { // light emitter event
 				s = strtok (NULL, " \t\n");
 				DWORD idx;
-				if (sscanf (s, "%d", &idx) == 1 && idx < nemitter) {
+				if (s && sscanf (s, "%d", &idx) == 1 && idx < nemitter) {
 					s = strtok (NULL, " \t\n");
-					if (!_stricmp (s, "ACTIVATE")) {
+					if (s && !_stricmp (s, "ACTIVATE")) {
 						DWORD flag;
 						if (sscanf (s+9, "%d", &flag) == 1)
 							emitter[idx]->Activate (flag != 0);
@@ -689,7 +689,7 @@ void Vessel::FRecorder_PlayEvent ()
 						g_pOrbiter->SetWarpFactor (RecordingSpeed, true, WarpDelay);
 			} else if (!_strnicmp (s, "CAMERA", 6)) { // DEPRECATED - now stored in system stream
 				s = strtok (NULL, " \t\n");
-				if (!_strnicmp (s, "PRESET", 6)) {
+				if (s && !_strnicmp (s, "PRESET", 6)) {
 					sscanf (s+7, "%d", &i);
 					g_camera->RecallPreset (i);
 				}
@@ -880,17 +880,17 @@ void Orbiter::FRecorder_Play ()
 						SetWarpFactor (RecordingSpeed, true, WarpDelay);
 			} else if (!_strnicmp (s, "CAMERA", 6)) {
 				s = strtok (NULL, " \t\n");
-				if (!_strnicmp (s, "PRESET", 6)) {
+				if (s && !_strnicmp (s, "PRESET", 6)) {
 					sscanf (s+7, "%d", &i);
 					g_camera->RecallPreset (i);
-				} else if (!_strnicmp (s, "SET", 3)) {
+				} else if (s && !_strnicmp (s, "SET", 3)) {
 					CameraMode *cm = CameraMode::Create (s+4);
 					if (cm) g_camera->SetCMode (cm);
 					delete cm;
 				}
 			} else if (!_strnicmp (s, "FOCUS", 5)) {
 				s = strtok (NULL, " \t\n");
-				vfocus = g_psys->GetVessel (s, true);
+				if (s) vfocus = g_psys->GetVessel (s, true);
 				if (vfocus && Cfg()->CfgRecPlayPrm.bReplayFocus)
 					g_pOrbiter->SetFocusObject (vfocus);
 			} else if (!_strnicmp (s, "NOTE", 4)) {
